@@ -11,7 +11,8 @@ struct Args {
   #[arg(short, long, value_delimiter = ',')]
   idjits: Vec<String>,
 
-  /// The pneumonics to use to generate valid idjits. Can be specified multiple times.
+  /// The pneumonics to use to generate valid idjits. Can be specified multiple
+  /// times. Follows the convention '(a|b)(c|d|e)'.
   #[arg(short, long)]
   pneumonic: Vec<String>,
 }
