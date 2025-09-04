@@ -29,6 +29,7 @@ pub fn construct_idjits(branches: &Vec<String>, prefix: &String) -> Vec<String> 
 pub fn compute_branches(pneumonics: &Vec<String>, valid_idjits: &Vec<String>) -> Vec<String> {
   let mut branches: Vec<String> = Vec::new();
   for pneumonic in pneumonics {
+    let mut pneumonic_branches: Vec<String> = Vec::new();
     let optional_parts: Vec<&str> = pneumonic
         .split(&['(', ')'])
         .into_iter()
@@ -41,18 +42,20 @@ pub fn compute_branches(pneumonics: &Vec<String>, valid_idjits: &Vec<String>) ->
 
       // Fill out the branches
       let mut new_branches: Vec<String> = Vec::new();
-      for existing_branch in &branches {
+      for existing_branch in &pneumonic_branches {
         for idjit in &optional_idjits {
           let mut new_branch = existing_branch.clone();
           new_branch.push_str(*idjit);
           new_branches.push(new_branch);
         }
       }
-      branches.extend(new_branches);
+      pneumonic_branches.extend(new_branches);
       for idjit in &optional_idjits {
-        branches.push(idjit.to_string());
+        pneumonic_branches.push(idjit.to_string());
       }
     }
+
+    branches.extend(pneumonic_branches);
   }
 
   return branches.into_iter().filter(|b| b.len() > 1).collect();
@@ -90,6 +93,30 @@ mod tests {
       "bce",
       "cd",
       "ce",
+    ]);
+  }
+
+  #[test]
+  fn test_compute_branches_with_multiple_pneumonics() {
+    let pneumonics = vec![
+      "(a|b)(c)".to_string(),
+      "(d|e)(a)".to_string(),
+    ];
+    let valid_idjits = vec![
+      "a".to_string(),
+      "b".to_string(),
+      "c".to_string(),
+      "d".to_string(),
+      "e".to_string(),
+    ];
+  
+    let result = compute_branches(&pneumonics, &valid_idjits);
+
+    assert_eq!(result, vec![
+      "ac",
+      "bc",
+      "da",
+      "ea",
     ]);
   }
 
