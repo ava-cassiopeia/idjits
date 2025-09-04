@@ -30,8 +30,43 @@ fn main() {
     panic!("At least one idjit (--idjits) must be provided.");
   }
 
-  let branches: Vec<&str> = Vec::new();
-  for pneumonic in &pneumonics {
+  let branches = compute_branches(&pneumonics, &raw_idjits);
+  let idjits = construct_idjits(&branches, &prefix);
+
+  for idjit in idjits {
+    println!("{}", idjit);
+  }
+}
+
+fn construct_idjits(branches: &Vec<String>, prefix: &String) -> Vec<String> {
+  let mut output_idjits: Vec<String> = Vec::new();
+
+  for branch in branches {
+    let mut output_alias = prefix.clone().to_string();
+    output_alias.push_str(branch);
+
+    let mut output_idjit_pipeline_list: Vec<String> = Vec::new();
+  
+    for c in branch.chars() {
+      let mut idjit_part = prefix.clone();
+      idjit_part.push(c);
+      output_idjit_pipeline_list.push(idjit_part);
+    }
+
+    let output_idjit_pipeline = output_idjit_pipeline_list.join(" && ");
+    if output_idjit_pipeline == output_alias {
+      continue;
+    }
+
+    output_idjits.push(format!("alias {}='{}'", output_alias, output_idjit_pipeline));
+  }
+
+  return output_idjits;
+}
+
+fn compute_branches(pneumonics: &Vec<String>, valid_idjits: &Vec<String>) -> Vec<String> {
+  let mut branches: Vec<String> = Vec::new();
+  for pneumonic in pneumonics {
     let optional_parts: Vec<&str> = pneumonic
         .split(&['(', ')'])
         .into_iter()
@@ -40,11 +75,25 @@ fn main() {
 
     for optional_part in &optional_parts {
       let optional_idjits: Vec<&str> = optional_part.split('|').collect();
-      validate_idjits(&raw_idjits, &optional_idjits);
+      validate_idjits(&valid_idjits, &optional_idjits);
+
+      // Fill out the branches
+      let mut new_branches: Vec<String> = Vec::new();
+      for existing_branch in &branches {
+        for idjit in &optional_idjits {
+          let mut new_branch = existing_branch.clone();
+          new_branch.push_str(*idjit);
+          new_branches.push(new_branch);
+        }
+      }
+      branches.extend(new_branches);
+      for idjit in &optional_idjits {
+        branches.push(idjit.to_string());
+      }
     }
   }
 
-  println!("Hello, world! {}, {:?}, {:?}", prefix, pneumonics, raw_idjits);
+  return branches;
 }
 
 fn validate_idjits(idjits: &Vec<String>, possible_idjits: &Vec<&str>) {
