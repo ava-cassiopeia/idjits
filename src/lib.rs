@@ -1,3 +1,5 @@
+mod validation;
+
 pub fn construct_idjits(branches: &Vec<String>, prefix: &String) -> Vec<String> {
   let mut output_idjits: Vec<String> = Vec::new();
 
@@ -35,7 +37,7 @@ pub fn compute_branches(pneumonics: &Vec<String>, valid_idjits: &Vec<String>) ->
 
     for optional_part in &optional_parts {
       let optional_idjits: Vec<&str> = optional_part.split('|').collect();
-      validate_idjits(&valid_idjits, &optional_idjits);
+      validation::validate_idjits(&valid_idjits, &optional_idjits);
 
       // Fill out the branches
       let mut new_branches: Vec<String> = Vec::new();
@@ -54,14 +56,4 @@ pub fn compute_branches(pneumonics: &Vec<String>, valid_idjits: &Vec<String>) ->
   }
 
   return branches;
-}
-
-pub fn validate_idjits(idjits: &Vec<String>, possible_idjits: &Vec<&str>) {
-  for possible_idjit in possible_idjits {
-    if !idjits.contains(&String::from(*possible_idjit)) {
-      panic!("'{}' is not a valid idjit.", possible_idjit);
-    }
-  }
-
-  // otherwise all is good
 }
