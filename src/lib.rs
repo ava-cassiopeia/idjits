@@ -92,4 +92,19 @@ mod tests {
       "ce",
     ]);
   }
+
+  #[test]
+  fn test_construct_idjits() {
+    let branches = vec![
+      "ab".to_string(),
+      "abc".to_string(),
+    ];
+
+    let idjits = construct_idjits(&branches, &"pre".to_string());
+
+    assert_eq!(idjits, vec![
+      "alias preab='prea && preb'".to_string(),
+      "alias preabc='prea && preb && prec'".to_string(),
+    ]);
+  }
 }
