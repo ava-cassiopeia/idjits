@@ -1,5 +1,7 @@
 # Idjits
 
+![Crates.io Version](https://img.shields.io/crates/v/idjits)
+
 A simple Rust CLI tool for generating idjits.
 
 ## Installing
