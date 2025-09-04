@@ -55,5 +55,41 @@ pub fn compute_branches(pneumonics: &Vec<String>, valid_idjits: &Vec<String>) ->
     }
   }
 
-  return branches;
+  return branches.into_iter().filter(|b| b.len() > 1).collect();
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_compute_branches() {
+    let pneumonics = vec![
+      "(a|b)(c)(d|e)".to_string(),
+    ];
+    let valid_idjits = vec![
+      "a".to_string(),
+      "b".to_string(),
+      "c".to_string(),
+      "d".to_string(),
+      "e".to_string(),
+    ];
+  
+    let result = compute_branches(&pneumonics, &valid_idjits);
+
+    assert_eq!(result, vec![
+      "ac",
+      "bc",
+      "ad",
+      "ae",
+      "bd",
+      "be",
+      "acd",
+      "ace",
+      "bcd",
+      "bce",
+      "cd",
+      "ce",
+    ]);
+  }
 }
