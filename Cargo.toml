@@ -6,6 +6,7 @@ edition = "2024"
 license-file = "LICENSE.md"
 homepage = "https://github.com/ava-cassiopeia/idjits"
 repository = "https://github.com/ava-cassiopeia/idjits"
+readme = "README.md"
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
