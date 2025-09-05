@@ -1,6 +1,6 @@
-pub fn validate_pneumonics(pneumonics: &Vec<String>, maybe_pneumonics: &Vec<&str>) {
+pub fn validate_pneumonics(pneumonics: &[String], maybe_pneumonics: &[String]) {
   for maybe_pneumonic in maybe_pneumonics {
-    if !pneumonics.contains(&String::from(*maybe_pneumonic)) {
+    if !pneumonics.contains(maybe_pneumonic) {
       panic!("'{}' is not a valid pneumonic. Options are: {:?}", maybe_pneumonic, pneumonics);
     }
   }
@@ -20,8 +20,8 @@ mod tests {
       "c".to_string(),
     ];
     let possible_pneumonics = vec![
-      "a",
-      "b",
+      "a".to_string(),
+      "b".to_string(),
     ];
   
     // No need to assert - this will panic if validation fails.
@@ -37,9 +37,9 @@ mod tests {
       "c".to_string(),
     ];
     let possible_pneumonics = vec![
-      "a",
-      "b",
-      "d",
+      "a".to_string(),
+      "b".to_string(),
+      "d".to_string(),
     ];
   
     validate_pneumonics(&pneumonics, &possible_pneumonics);

@@ -1,16 +1,16 @@
 mod validation;
 
-pub fn construct_idjits(branches: &Vec<String>, prefix: &String) -> Vec<String> {
+pub fn construct_idjits(branches: &[String], prefix: &str) -> Vec<String> {
   let mut output_idjits: Vec<String> = Vec::new();
 
   for branch in branches {
-    let mut output_alias = prefix.clone().to_string();
+    let mut output_alias = prefix.to_string();
     output_alias.push_str(branch);
 
     let mut output_idjit_pipeline_list: Vec<String> = Vec::new();
   
     for c in branch.chars() {
-      let mut idjit_part = prefix.clone();
+      let mut idjit_part = prefix.to_string();
       idjit_part.push(c);
       output_idjit_pipeline_list.push(idjit_part);
     }
@@ -26,7 +26,7 @@ pub fn construct_idjits(branches: &Vec<String>, prefix: &String) -> Vec<String> 
   return output_idjits;
 }
 
-pub fn compute_branches(phrases: &Vec<String>, pneumonics: &Vec<String>) -> Vec<String> {
+pub fn compute_branches(phrases: &[String], pneumonics: &[String]) -> Vec<String> {
   let mut branches: Vec<String> = Vec::new();
   for phrase in phrases {
     let mut phrase_branches: Vec<String> = Vec::new();
@@ -37,7 +37,7 @@ pub fn compute_branches(phrases: &Vec<String>, pneumonics: &Vec<String>) -> Vec<
         .collect();
 
     for optional_part in &optional_parts {
-      let optional_pneumonics: Vec<&str> = optional_part.split('|').collect();
+      let optional_pneumonics: Vec<String> = optional_part.split('|').map(|i| i.to_string()).collect();
       validation::validate_pneumonics(&pneumonics, &optional_pneumonics);
 
       // Fill out the branches
@@ -45,7 +45,7 @@ pub fn compute_branches(phrases: &Vec<String>, pneumonics: &Vec<String>) -> Vec<
       for existing_branch in &phrase_branches {
         for phrase_pneumonic in &optional_pneumonics {
           let mut new_branch = existing_branch.clone();
-          new_branch.push_str(*phrase_pneumonic);
+          new_branch.push_str(phrase_pneumonic);
           new_branches.push(new_branch);
         }
       }
