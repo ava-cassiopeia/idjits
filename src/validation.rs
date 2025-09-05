@@ -1,7 +1,7 @@
-pub fn validate_idjits(idjits: &Vec<String>, possible_idjits: &Vec<&str>) {
-  for possible_idjit in possible_idjits {
-    if !idjits.contains(&String::from(*possible_idjit)) {
-      panic!("'{}' is not a valid idjit.", possible_idjit);
+pub fn validate_pneumonics(pneumonics: &Vec<String>, maybe_pneumonics: &Vec<&str>) {
+  for maybe_pneumonic in maybe_pneumonics {
+    if !pneumonics.contains(&String::from(*maybe_pneumonic)) {
+      panic!("'{}' is not a valid pneumonic. Options are: {:?}", maybe_pneumonic, pneumonics);
     }
   }
 
@@ -13,35 +13,35 @@ mod tests {
   use super::*;
 
   #[test]
-  fn test_validate_idjits_validates() {
-    let idjits = vec![
+  fn test_validate_pneumonics_validates() {
+    let pneumonics = vec![
       "a".to_string(),
       "b".to_string(),
       "c".to_string(),
     ];
-    let possible_idjits = vec![
+    let possible_pneumonics = vec![
       "a",
       "b",
     ];
   
     // No need to assert - this will panic if validation fails.
-    validate_idjits(&idjits, &possible_idjits);
+    validate_pneumonics(&pneumonics, &possible_pneumonics);
   }
 
   #[test]
-  #[should_panic(expected = "'d' is not a valid idjit.")]
-  fn test_validate_idjits_panics_if_invalid() {
-    let idjits = vec![
+  #[should_panic(expected = "'d' is not a valid pneumonic.")]
+  fn test_validate_pneumonics_panics_if_invalid() {
+    let pneumonics = vec![
       "a".to_string(),
       "b".to_string(),
       "c".to_string(),
     ];
-    let possible_idjits = vec![
+    let possible_pneumonics = vec![
       "a",
       "b",
       "d",
     ];
   
-    validate_idjits(&idjits, &possible_idjits);
+    validate_pneumonics(&pneumonics, &possible_pneumonics);
   }
 }

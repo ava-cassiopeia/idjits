@@ -8,31 +8,31 @@ struct Args {
   #[arg(long)]
   prefix: Option<String>,
 
-  /// All possible valid idjits, separated by a comma.
-  #[arg(short, long, value_delimiter = ',')]
-  idjits: Vec<String>,
+  /// All possible valid pneumonics, separated by commas.
+  #[arg(long, value_delimiter = ',')]
+  pneumonics: Vec<String>,
 
-  /// The pneumonics to use to generate valid idjits. Can be specified multiple
+  /// The phrases to use to generate valid idjits. Can be specified multiple
   /// times. Follows the convention '(a|b)(c|d|e)'.
   #[arg(short, long)]
-  pneumonic: Vec<String>,
+  phrase: Vec<String>,
 }
 
 fn main() {
   let args = Args::parse();
   let prefix = args.prefix.expect("--prefix is required.");
-  let pneumonics = args.pneumonic;
-  let raw_idjits = args.idjits;
+  let pneumonics = args.pneumonics;
+  let phrases = args.phrase;
 
   if pneumonics.len() < 1 {
     panic!("At least one --pneumonic is required.");
   }
 
-  if raw_idjits.len() < 1 {
-    panic!("At least one idjit (--idjits) must be provided.");
+  if phrases.len() < 1 {
+    panic!("At least one phrase (--phrase) must be provided.");
   }
 
-  let branches = idjits::compute_branches(&pneumonics, &raw_idjits);
+  let branches = idjits::compute_branches(&phrases, &pneumonics);
   let idjits = idjits::construct_idjits(&branches, &prefix);
 
   for idjit in idjits {
